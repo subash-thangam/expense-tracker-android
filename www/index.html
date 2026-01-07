@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Personal expense tracker - Track your daily expenses by month">
+  <meta name="theme-color" content="#667eea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Expense Tracker">
+
+  <title>Expense Tracker</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-top">
+        <!-- Back Button (hidden initially) -->
+        <button class="back-btn" id="back-btn" style="display: none;" aria-label="Back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+
+        <h1 class="app-title">💰 Expense Tracker</h1>
+
+        <!-- Menu -->
+        <div class="menu-container">
+          <button class="menu-btn" id="menu-btn" aria-label="Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="menu-dropdown" id="menu-dropdown">
+            <button class="menu-item" id="menu-add-group">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Add Group</span>
+            </button>
+            <button class="menu-item" id="menu-delete-group" style="display: none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Delete Group</span>
+            </button>
+            <button class="menu-item" id="menu-export">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Export Data</span>
+            </button>
+            <button class="menu-item" id="menu-import">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Import Data</span>
+            </button>
+            <button class="menu-item" id="menu-install" style="display: none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                </path>
+              </svg>
+              <span>Install App</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Groups View (Home Page) -->
+    <div id="groups-view" class="view-container">
+      <main class="groups-container">
+        <div class="groups-list" id="groups-list">
+          <!-- Group cards will be rendered here -->
+        </div>
+
+        <!-- Empty State for Groups -->
+        <div class="empty-state" id="empty-groups-state">
+          <div class="empty-icon">📁</div>
+          <div class="empty-text">No expense groups yet</div>
+          <button class="btn btn-primary" onclick="ui.showParentModal()">Create Your First Group</button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Entries View (Group Detail) -->
+    <div id="entries-view" class="view-container" style="display: none;">
+      <!-- Parent Info -->
+      <div class="parent-info">
+        <div class="parent-name" id="parent-name">Select a group</div>
+        <div class="total-amount" id="total-amount">₹0.00</div>
+      </div>
+
+      <!-- Entries Container -->
+      <main class="entries-container">
+        <div class="entries-list" id="entries-list">
+          <!-- Entries will be rendered here -->
+        </div>
+
+        <!-- Empty State for Entries -->
+        <div class="empty-state" id="empty-entries-state">
+          <div class="empty-icon">📝</div>
+          <div class="empty-text">No expenses in this group yet</div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab-btn" aria-label="Add">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Entry Modal (Add/Edit) -->
+  <div class="modal" id="entry-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="entry-modal-title">Add Expense</h2>
+        <button class="close-modal" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="entry-form">
+        <div class="form-group">
+          <label class="form-label" for="entry-description">Description *</label>
+          <input type="text" id="entry-description" class="form-input" placeholder="e.g., Groceries, Coffee" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="entry-amount">Amount (₹) *</label>
+            <input type="number" id="entry-amount" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="entry-date">Date *</label>
+            <input type="date" id="entry-date" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="entry-category">Category</label>
+          <div class="category-selector-container">
+            <select id="entry-category" class="form-select">
+              <option value="">Select category...</option>
+              <!-- Categories will be populated dynamically -->
+            </select>
+            <button type="button" class="btn-add-category" id="add-category-btn" title="Add new category">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="entry-submit-btn">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Category Modal (Add New Category) -->
+  <div class="modal" id="category-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add New Category</h2>
+        <button class="close-modal" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="category-form">
+        <div class="form-group">
+          <label class="form-label" for="category-name-input">Category Name *</label>
+          <input type="text" id="category-name-input" class="form-input" placeholder="e.g., Travel, Dining Out"
+            required>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Entry Confirmation Modal -->
+  <div class="modal" id="delete-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Delete Expense?</h2>
+        <button class="close-modal" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Are you sure you want to delete this expense? This
+        action cannot be undone.</p>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Parent Modal (Create Group) -->
+  <div class="modal" id="parent-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Create Expense Group</h2>
+        <button class="close-modal" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="parent-form">
+        <div class="form-group">
+          <label class="form-label" for="parent-name-input">Group Name *</label>
+          <input type="text" id="parent-name-input" class="form-input" placeholder="e.g., January 2026" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="parent-month">Month/Year *</label>
+          <input type="month" id="parent-month" class="form-input" required>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Parent Confirmation Modal -->
+  <div class="modal" id="delete-parent-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Delete Group?</h2>
+        <button class="close-modal" aria-label="Close">
+          <svg view Box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Are you sure you want to delete this group and all
+        its expenses? This action cannot be undone.</p>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-parent-btn">Delete Group</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Loading Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/db.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => console.log('Service Worker registered:', registration.scope))
+          .catch(error => console.log('Service Worker registration failed:', error));
+      });
+    }
+  </script>
+</body>
+
+</html>
